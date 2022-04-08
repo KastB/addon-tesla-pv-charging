@@ -1,0 +1,51 @@
+{
+  "name": "TeslaPVCharging",
+  "version": "0.0.1",
+  "slug": "teslapvcharging",
+  "description": "Control charging power to maximize pv self consumption",
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "url": "https://github.com/KastB/addon-tesla-pv-charging",
+  "startup": "services",
+  "boot": "auto",
+  "panel_icon": "mdi:HomeFloorL",
+  "panel_title": "TeslaPVCharging",
+  "uart": false,
+  "gpio": false,
+  "map": ["config:rw"],
+  "host_network": false,
+  "environment": {
+  },
+  "devices": [
+  ],
+  "privileged": [
+  ],
+  "init": false,
+  "options": {
+    "TESLA_MAIL": "",
+    "TESLA_TOKEN": "",
+    "EMPTY_SOC": "40",
+    "MID_SOC": "75",
+    "DO_NOT_INTERFERE_CHARGE_LIMIT": "100",
+    "DO_NOT_INTERFERE_AMPERAGE": "16",
+    "MIN_AMPERAGE": "3",
+    "EFFECTIVE_VOLTAGE": "690",
+    "MQTT_USER": "",
+    "MQTT_PW": "",
+    "MQTT_HOST": "",
+    "MQTT_PORT": ""
+  },
+  "schema": {
+    "TESLA_MAIL": "str",
+    "TESLA_TOKEN": "str",
+    "EMPTY_SOC": "str",
+    "MID_SOC": "str",
+    "DO_NOT_INTERFERE_CHARGE_LIMIT": "str",
+    "DO_NOT_INTERFERE_AMPERAGE": "str",
+    "MIN_AMPERAGE": "str",
+    "EFFECTIVE_VOLTAGE": "str",
+    "MQTT_USER": "str",
+    "MQTT_PW": "str",
+    "MQTT_HOST": "str",
+    "MQTT_PORT": "str"
+}
+}
