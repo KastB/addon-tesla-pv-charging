@@ -1,0 +1,11 @@
+{
+    "build_from": {
+      "amd64": "python:3.8",
+      "armhf": "python:3.8",
+      "armv7": "python:3.8",
+      "i386": "python:3.8",
+      "aarch64": "python:3.8"
+    },
+    "args": {
+    }
+  }
