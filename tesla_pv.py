@@ -53,14 +53,14 @@ with teslapy.Tesla(MAIL) as tesla:
 
 
     def get_vehicle():
-        TOKEN = os.getenv('TESLA_TOKEN')
+        token = os.getenv('TESLA_TOKEN')
         print(f"already authorized: {tesla.authorized}")
         if not tesla.authorized:
-            tesla.refresh_token(refresh_token=TOKEN)
+            tesla.refresh_token(refresh_token=token)
         try:
             vehicle = tesla.vehicle_list()[0]
         except:
-            tesla.refresh_token(refresh_token=TOKEN)
+            tesla.refresh_token(refresh_token=token)
             vehicle = tesla.vehicle_list()[0] 
         vehicle.sync_wake_up()
         return vehicle
@@ -92,12 +92,12 @@ with teslapy.Tesla(MAIL) as tesla:
 
 
     def update_charge_speed(twc_is_connected: bool, car_plugged: bool, soc: float, current_amperage: float, current_charge_power: float, charge_limit_soc: float, power_history: np.array) -> object:
-        empty_soc = os.getenv('EMPTY_SOC')  # soc below the car is considered empty => full charging speed
-        mid_soc = os.getenv('MID_SOC')  # soc until we want to charge every bit of produced pv power
-        do_not_interfere_charge_limit_soc = os.getenv('DO_NOT_INTERFERE_CHARGE_LIMIT')
+        empty_soc = int(os.getenv('EMPTY_SOC'))  # soc below the car is considered empty => full charging speed
+        mid_soc = int(os.getenv('MID_SOC'))  # soc until we want to charge every bit of produced pv power
+        do_not_interfere_charge_limit_soc = int(os.getenv('DO_NOT_INTERFERE_CHARGE_LIMIT'))
 
-        do_not_interfere_amperage = os.getenv('DO_NOT_INTERFERE_AMPERAGE')
-        min_amperage = os.getenv('MIN_AMPERAGE')
+        do_not_interfere_amperage = int(os.getenv('DO_NOT_INTERFERE_AMPERAGE'))
+        min_amperage = int(os.getenv('MIN_AMPERAGE'))
 
         # strip first 10 seconds after power change as the charger needs to ramp up (to avoid oszillation)
         global change_of_charge_power
@@ -165,7 +165,7 @@ with teslapy.Tesla(MAIL) as tesla:
                 if new_do_charging:
                     new_amperage = max(new_amperage, min_amperage)
                     if new_amperage != current_amperage:
-
+                        set_charge_speed(new_amperage, do_not_interfere_amperage)
 
     # The callback for when the client receives a CONNACK response from the server.
     def on_connect(client, userdata, flags, rc):
@@ -187,7 +187,7 @@ with teslapy.Tesla(MAIL) as tesla:
     client.on_connect = on_connect
     client.on_message = on_message
     client.username_pw_set(os.getenv('MQTT_USER'), os.getenv('MQTT_PW'))
-    client.connect(os.getenv('MQTT_HOST'), os.getenv('MQTT_PORT'), 60)
+    client.connect(os.getenv('MQTT_HOST'), int(os.getenv('MQTT_PORT')), 60)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
