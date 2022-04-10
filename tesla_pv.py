@@ -12,8 +12,11 @@ from math import ceil, floor
 import numpy as np
 import paho.mqtt.client as mqtt
 import teslapy
+import json
 
-MAIL = os.getenv('TESLA_MAIL')
+with open("/data/options.json", "r") as fp:
+    options = json.load(fp)
+MAIL = options['TESLA_MAIL']
 change_of_charge_power = False
 
 with teslapy.Tesla(MAIL) as tesla:
@@ -53,7 +56,7 @@ with teslapy.Tesla(MAIL) as tesla:
 
 
     def get_vehicle():
-        token = os.getenv('TESLA_TOKEN')
+        token = options['TESLA_TOKEN']
         print(f"already authorized: {tesla.authorized}")
         if not tesla.authorized:
             tesla.refresh_token(refresh_token=token)
@@ -92,12 +95,12 @@ with teslapy.Tesla(MAIL) as tesla:
 
 
     def update_charge_speed(twc_is_connected: bool, car_plugged: bool, soc: float, current_amperage: float, current_charge_power: float, charge_limit_soc: float, power_history: np.array) -> object:
-        empty_soc = int(os.getenv('EMPTY_SOC'))  # soc below the car is considered empty => full charging speed
-        mid_soc = int(os.getenv('MID_SOC'))  # soc until we want to charge every bit of produced pv power
-        do_not_interfere_charge_limit_soc = int(os.getenv('DO_NOT_INTERFERE_CHARGE_LIMIT'))
+        empty_soc = int(options['EMPTY_SOC'])  # soc below the car is considered empty => full charging speed
+        mid_soc = int(options['MID_SOC'])  # soc until we want to charge every bit of produced pv power
+        do_not_interfere_charge_limit_soc = int(options['DO_NOT_INTERFERE_CHARGE_LIMIT'])
 
-        do_not_interfere_amperage = int(os.getenv('DO_NOT_INTERFERE_AMPERAGE'))
-        min_amperage = int(os.getenv('MIN_AMPERAGE'))
+        do_not_interfere_amperage = int(options['DO_NOT_INTERFERE_AMPERAGE'])
+        min_amperage = int(options['MIN_AMPERAGE'])
 
         # strip first 10 seconds after power change as the charger needs to ramp up (to avoid oszillation)
         global change_of_charge_power
@@ -123,7 +126,7 @@ with teslapy.Tesla(MAIL) as tesla:
                     new_amperage = do_not_interfere_amperage - 1
                     new_do_charging = True
                 else:
-                    effective_voltage = os.getenv('EFFECTIVE_VOLTAGE')
+                    effective_voltage = options['EFFECTIVE_VOLTAGE']
                     if not effective_voltage:
                         try:
                             effective_voltage = round(current_charge_power * 1000.0 / current_amperage / 230.0) * 230.0
@@ -186,8 +189,8 @@ with teslapy.Tesla(MAIL) as tesla:
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.username_pw_set(os.getenv('MQTT_USER'), os.getenv('MQTT_PW'))
-    client.connect(os.getenv('MQTT_HOST'), int(os.getenv('MQTT_PORT')), 60)
+    client.username_pw_set(options['MQTT_USER'], options['MQTT_PW'])
+    client.connect(options['MQTT_HOST'], int(options['MQTT_PORT']), 60)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
