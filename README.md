@@ -23,4 +23,5 @@ Caveats:
 - The mqtt topics are not yet configurable (feel free to fork and create a merge request, or create an issue with a feature request)
 - some parameters might not yet be exposed in the plugin (e.g. effective voltage (just 2 phases, US-grid), ?)
 - This works only for Teslas, we must rely on an unofficial api, and at the moment only for one car (might change soon though)
-- I limited the rate to 30s and the car needs a few seconds to adapt the charge speed. So we consume 700-1000W in the "prevent-feed-in-phase"
+- I limited the rate to 30s and the car needs a few seconds to adapt the charge speed. So we consume 700-1000W in the "prevent-feed-in-phase": at 1PM the Tesla was plugged in:
+![image](https://user-images.githubusercontent.com/9568700/163136293-c49f7e08-d66a-470c-9d55-408dabdfffcf.png)
