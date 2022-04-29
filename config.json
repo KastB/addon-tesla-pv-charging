@@ -13,6 +13,7 @@
   "gpio": false,
   "map": ["config:rw"],
   "host_network": false,
+  "ingress": true,
   "environment": {
   },
   "devices": [
