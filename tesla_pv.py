@@ -93,7 +93,8 @@ with teslapy.Tesla(MAIL) as tesla:
             i = 0
             for v in vehicles:
                 v.sync_wake_up()
-                if float(v["vehicle_state"]["odometer"]) - odom < 0.2:
+                print(f"car {i} has {float(v['vehicle_state']['odometer']) * 1.60934} km")
+                if abs(float(v["vehicle_state"]["odometer"]) * 1.60934 - odom) < 2.0:
                     vehicle = v
                     car_index_mapping[car_index] = i
                 i += 1
