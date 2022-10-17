@@ -74,6 +74,19 @@ with teslapy.Tesla(MAIL) as tesla:
     historic_data = HistoricData()
     print("initialized", flush=True)
 
+    def checked_wake_up(v):
+        for _ in range(5):
+            if not v.available():
+                print("start wakeup")
+                try:
+                    v.sync_wake_up()
+                except Exception as e:
+                    print(f"Exception occurred: {e}")
+            else:
+                print("vehicle is online")
+                break
+
+
     def get_vehicle(car_index, odom):
         token = options['TESLA_TOKEN']
         print(f"already authorized: {tesla.authorized}", flush=True)
@@ -92,7 +105,7 @@ with teslapy.Tesla(MAIL) as tesla:
             vehicle = None
             i = 0
             for v in vehicles:
-                v.sync_wake_up()
+                checked_wake_up(v)
                 print(f"car {i} has {float(v['vehicle_state']['odometer']) * 1.60934} km")
                 if abs(float(v["vehicle_state"]["odometer"]) * 1.60934 - odom) < 2.0:
                     vehicle = v
@@ -102,7 +115,7 @@ with teslapy.Tesla(MAIL) as tesla:
                 print(f"ERROR: no car with odom {odom} found")
                 return
         print(f"model of found vehicle: {vehicle['vehicle_config']['car_type']}")
-        vehicle.sync_wake_up()
+        checked_wake_up(vehicle)
         return vehicle
 
 
@@ -121,7 +134,7 @@ with teslapy.Tesla(MAIL) as tesla:
     def set_charge_speed(car_index, odom, amperage, do_not_interfere_amperage):
         vehicle = get_vehicle(car_index, odom)
         print("start wakeup")
-        vehicle.sync_wake_up()
+        checked_wake_up(vehicle)
         cur_amps = vehicle["charge_state"]["charge_current_request"]
         print(f"cur_amps: {cur_amps}, amps: {amperage}, dni: {do_not_interfere_amperage}")
         if cur_amps < do_not_interfere_amperage and \
@@ -204,7 +217,7 @@ with teslapy.Tesla(MAIL) as tesla:
                         else:
                             new_do_charging = True
                 for _ in range(3):
-                    try:    
+                    try:
                         if (current_charge_power > 0.1) != new_do_charging:
                             set_charging(car_index, odom, new_do_charging)
                         if new_do_charging:
