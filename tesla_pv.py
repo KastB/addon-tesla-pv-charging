@@ -21,7 +21,7 @@ MAIL = options['TESLA_MAIL']
 change_of_charge_power = False
 car_index_mapping = dict()
 
-with teslapy.Tesla(MAIL) as tesla:
+with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcelist=(418, 500, 502, 503, 504))) as tesla:
     class HistoricData(object):
         def __init__(self):
             self.timestamp = None
@@ -114,8 +114,8 @@ with teslapy.Tesla(MAIL) as tesla:
             if not vehicle:
                 print(f"ERROR: no car with odom {odom} found")
                 return
-        print(f"model of found vehicle: {vehicle['vehicle_config']['car_type']}")
         checked_wake_up(vehicle)
+        print(f"model of found vehicle: {vehicle['vehicle_config']['car_type']}")
         return vehicle
 
 
