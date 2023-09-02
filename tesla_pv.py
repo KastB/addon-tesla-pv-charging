@@ -50,23 +50,27 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
 
                 if datetime.now() - self.timestamp > timedelta(minutes=self.check_period_minutes):
                     if len(self.power_history) > 10:
-                        self.last_car_index += 1
-                        if self.last_car_index >= self.car_indices:
-                            self.last_car_index = 0
-                        car_index = self.last_car_index
-                        car = self.car[car_index]
-                        print(f"updating car {car_index}")
-                        print(car)
-                        update_charge_speed(car_index,
-                                            True,
-                                            car["plugged_in"] == "true",
-                                            float(car["battery_level"]),
-                                            float(car["charger_actual_current"]),
-                                            float(car["charger_power"]),
-                                            float(car["charge_limit_soc"]),
-                                            float(car["odometer"]),
-                                            np.array(self.power_history))
-                    self.reset()
+                       for _ in range(self.car_indices):
+                          self.last_car_index += 1
+                          if self.last_car_index >= self.car_indices:
+                              self.last_car_index = 0
+                          car_index = self.last_car_index
+                          car = self.car[car_index]
+                          if not car["latitude"].startswith(options["HOME_LAT"]) or not car["longitude"].startswith(options["HOME_LON"]):
+                             print(f"skipping car {car_index} as it is not home: lat: {car['latitude']}/{options['HOME_LAT']} lon:{car['longitude']}/{options['HOME_LON']}")
+                             continue
+                          print(f"updating car {car_index}")
+                          print(car)
+                          update_charge_speed(car_index,
+                                              True,
+                                              car["plugged_in"] == "true",
+                                              float(car["battery_level"]),
+                                              float(car["charger_actual_current"]),
+                                              float(car["charger_power"]),
+                                              float(car["charge_limit_soc"]),
+                                              float(car["odometer"]),
+                                              np.array(self.power_history))
+                      self.reset()
             except Exception as e:
                 print("Exception occured in add: {e}")
 
