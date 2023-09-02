@@ -55,7 +55,6 @@
     "HOME_LAT": "str",
     "HOME_LON": "str",
     "MQTT_TESLAMATE_TOPIC": "str",
-    "MQTT_GRID_POWER_TOPIC": "str",
-
+    "MQTT_GRID_POWER_TOPIC": "str"
 }
 }
