@@ -39,9 +39,10 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
         def add(self, topic, data):
             try:
                 # print(topic, flush=True)
-                if "vzlogger" in topic:
+                # if "vzlogger" in topic:
+                if option["MQTT_GRID_POWER_TOPIC"] in topic:
                     self.power_history.append(float(data.decode("ASCII")))
-                elif "teslamate" in topic:
+                elif option["MQTT_TESLAMATE_TOPIC"] in topic:
                     car_index = int(topic.split("/")[-2]) - 1
                     # print(f"car_index: {car_index}: {data.decode('ASCII') V3#V3}", flush=True)
                     self.car[car_index][topic.split("/")[-1]] = data.decode("ASCII")
@@ -70,7 +71,7 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
                                               float(car["charge_limit_soc"]),
                                               float(car["odometer"]),
                                               np.array(self.power_history))
-                      self.reset()
+                          self.reset()
             except Exception as e:
                 print("Exception occured in add: {e}")
 
@@ -237,8 +238,10 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
         print("Connected with result code " + str(rc), flush=True)
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
-        client.subscribe("teslamate/teslamate/cars/#")
-        client.subscribe("vzlogger/data/chn2/raw")
+        # client.subscribe("teslamate/teslamate/cars/#")
+        # client.subscribe("vzlogger/data/chn2/raw")
+        client.subscribe(option["MQTT_TESLAMATE_TOPIC"])
+        client.subscribe(option["vzlogger/data/chn2/raw"])
 
 
     # The callback for when a PUBLISH message is received from the server.

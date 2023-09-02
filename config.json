@@ -1,6 +1,6 @@
 {
   "name": "TeslaPVCharging",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "slug": "teslapvcharging",
   "description": "Control charging power to maximize pv self consumption",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
@@ -34,6 +34,8 @@
     "MQTT_PW": "",
     "MQTT_HOST": "",
     "MQTT_PORT": "",
+    "MQTT_TESLAMATE_TOPIC": "",
+    "MQTT_GRID_POWER_TOPIC": "",
     "HOME_LAT": "",
     "HOME_LON": ""
   },
@@ -51,7 +53,9 @@
     "MQTT_HOST": "str",
     "MQTT_PORT": "str",
     "HOME_LAT": "str",
-    "HOME_LON": "str"
+    "HOME_LON": "str",
+    "MQTT_TESLAMATE_TOPIC": "str",
+    "MQTT_GRID_POWER_TOPIC": "str",
 
 }
 }
