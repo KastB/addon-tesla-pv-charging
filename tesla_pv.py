@@ -72,7 +72,7 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
                                               float(car["charge_limit_soc"]),
                                               float(car["odometer"]),
                                               np.array(self.power_history))
-                          self.reset()
+                       self.reset()
             except Exception as e:
                 print(f"Exception occured in add: {e}")
 
