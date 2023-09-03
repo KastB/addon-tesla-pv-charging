@@ -39,10 +39,11 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
         def add(self, topic, data):
             try:
                 # print(topic, flush=True)
+                # print(data)
                 # if "vzlogger" in topic:
-                if option["MQTT_GRID_POWER_TOPIC"] in topic:
+                if options["MQTT_GRID_POWER_TOPIC"] in topic:
                     self.power_history.append(float(data.decode("ASCII")))
-                elif option["MQTT_TESLAMATE_TOPIC"] in topic:
+                elif options["MQTT_TESLAMATE_TOPIC"].replace("#", "") in topic:
                     car_index = int(topic.split("/")[-2]) - 1
                     # print(f"car_index: {car_index}: {data.decode('ASCII') V3#V3}", flush=True)
                     self.car[car_index][topic.split("/")[-1]] = data.decode("ASCII")
@@ -73,7 +74,7 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
                                               np.array(self.power_history))
                           self.reset()
             except Exception as e:
-                print("Exception occured in add: {e}")
+                print(f"Exception occured in add: {e}")
 
 
     historic_data = HistoricData()
@@ -240,8 +241,8 @@ with teslapy.Tesla(MAIL, timeout=120, retry=teslapy.Retry(total=3, status_forcel
         # reconnect then subscriptions will be renewed.
         # client.subscribe("teslamate/teslamate/cars/#")
         # client.subscribe("vzlogger/data/chn2/raw")
-        client.subscribe(option["MQTT_TESLAMATE_TOPIC"])
-        client.subscribe(option["vzlogger/data/chn2/raw"])
+        client.subscribe(options["MQTT_TESLAMATE_TOPIC"])
+        client.subscribe(options["MQTT_GRID_POWER_TOPIC"])
 
 
     # The callback for when a PUBLISH message is received from the server.
