@@ -5,6 +5,9 @@ FROM $BUILD_FROM
 LABEL maintainer="kastbernd@gmx.de"
 
 USER root
+RUN apt-get update && apt-get install -y python3 python3-dev gcc \
+    gfortran musl-dev \
+    libffi-dev
 COPY requirements.txt /
 COPY tesla_pv.py /
 
