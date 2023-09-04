@@ -1,10 +1,10 @@
 {
     "build_from": {
-      "amd64": "amd64/python:3.8.11-buster",
-      "armhf": "armhf/python:3.8.11-buster",
-      "armv7": "arm32v7/python:3.8.11-buster",
-      "i386": "i386/python:3.8.11-buster",
-      "aarch64": "arm64v8/python:3.8.11-buster"
+      "amd64": "amd64/python",
+      "armhf": "armhf/python",
+      "armv7": "arm32v7/python",
+      "i386": "i386/python",
+      "aarch64": "arm64v8/python"
     },
     "args": {
     }
