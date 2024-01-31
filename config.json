@@ -1,6 +1,6 @@
 {
   "name": "TeslaPVCharging",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "slug": "teslapvcharging",
   "description": "Control charging power to maximize pv self consumption",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
