@@ -1,4 +1,4 @@
-TeslaPy==2.8.0
+TeslaPy==2.9.0
 numpy==1.21.5
 paho-mqtt==1.6.1
 
